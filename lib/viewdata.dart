@@ -1,5 +1,6 @@
 import 'package:api_flutter/Product.dart';
 import 'package:api_flutter/User.dart';
+import 'package:api_flutter/User_Screen.dart';
 import 'package:flutter/material.dart';
 
 
@@ -39,11 +40,24 @@ class _ViewdataState extends State<Viewdata> {
                   Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => User()
+                builder: (context) => Users()
             ),
                   );
                  },
                  child:Text("GET Info User") ,)
+                ), Center(
+
+                child: ElevatedButton(
+            onPressed: ()
+                {
+                  Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => UserScreen()
+            ),
+                  );
+                 },
+                 child:Text("GET Info User 2") ,)
                 ),
           ],
         )

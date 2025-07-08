@@ -33,13 +33,12 @@ class _ProductState extends State<Product> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12), // زوايا دائرية
               ),
-              elevation: 4, // ظل للكرت
+              elevation: 4,
               child: Padding(
-                padding: EdgeInsets.all(12), // مسافة داخلية للكرت
+                padding: EdgeInsets.all(12),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // رقم المنتج على اليسار
                     CircleAvatar(
                       backgroundColor: Colors.blueAccent,
                       child: Text(
@@ -50,12 +49,14 @@ class _ProductState extends State<Product> {
                     SizedBox(width: 16),
 
                     Expanded(
+
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text1(
                             singleProduct['title'].toString(),
                             size: 16,
+
                           ),
                           SizedBox(height: 4),
                           Text1(
@@ -64,6 +65,7 @@ class _ProductState extends State<Product> {
                           ),
                         ],
                       ),
+
                     ),
                   ],
                 ),
@@ -88,6 +90,8 @@ class _ProductState extends State<Product> {
     return Text(
       txt,
       style: TextStyle(fontSize: size),
+  maxLines: 1,
+      overflow: TextOverflow.clip,
     );
   }
 

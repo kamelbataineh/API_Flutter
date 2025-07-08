@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 
 List? user;
 
-class User extends StatefulWidget {
-  const User({super.key});
+class Users extends StatefulWidget {
+  const Users({super.key});
 
   @override
-  State<User> createState() => _UserState();
+  State<Users> createState() => _UsersState();
 }
 
 
 
-class _UserState extends State<User> {
+class _UsersState extends State<Users> {
   @override
   void initState() {
     super.initState();
@@ -69,7 +69,7 @@ class _UserState extends State<User> {
                 ),
               ),
             );
-
+//
           },
         ):Center(child: CircularProgressIndicator()));
   }
