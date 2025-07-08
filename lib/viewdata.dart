@@ -1,6 +1,8 @@
 import 'package:api_flutter/Product.dart';
 import 'package:api_flutter/User.dart';
 import 'package:api_flutter/User_Screen.dart';
+import 'package:api_flutter/beeceptor/screen/add_product.dart';
+import 'package:api_flutter/beeceptor/screen/get_product.dart';
 import 'package:flutter/material.dart';
 
 
@@ -58,6 +60,38 @@ class _ViewdataState extends State<Viewdata> {
                   );
                  },
                  child:Text("GET Info User 2") ,)
+                ), Row(
+                  children: [
+
+                    Center(
+
+                    child: ElevatedButton(
+                                onPressed: ()
+                    {
+                      Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                    builder: (context) => GetProduct()
+                                ),
+                      );
+                     },
+                     child:Text("GetProduct_Productmodel") ,)
+                    ),
+                    Center(
+
+                        child: ElevatedButton(
+                          onPressed: ()
+                          {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AddProduct()
+                              ),
+                            );
+                          },
+                          child:Text("add product") ,)
+                    ),
+                  ],
                 ),
           ],
         )

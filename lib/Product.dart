@@ -10,8 +10,6 @@ class Product extends StatefulWidget {
   State<Product> createState() => _ProductState();
 }
 
-
-
 class _ProductState extends State<Product> {
   @override
   void initState() {
@@ -23,57 +21,54 @@ class _ProductState extends State<Product> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(),
-        body:products != null? ListView.builder(
-          padding: EdgeInsets.all(20),
-          itemCount: products!.length,
-          itemBuilder: (context, index) {
-            Map<String, dynamic> singleProduct = products![index];
-            return Card(
-              margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // مسافة حول الكرت
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12), // زوايا دائرية
-              ),
-              elevation: 4,
-              child: Padding(
-                padding: EdgeInsets.all(12),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.blueAccent,
-                      child: Text(
-                        singleProduct['id'].toString(),
-                        style: TextStyle(color: Colors.white),
-                      ),
+        body: products != null
+            ? ListView.builder(
+                padding: EdgeInsets.all(20),
+                itemCount: products!.length,
+                itemBuilder: (context, index) {
+                  Map<String, dynamic> singleProduct = products![index];
+                  return Card(
+                    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    SizedBox(width: 16),
-
-                    Expanded(
-
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    elevation: 4,
+                    child: Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text1(
-                            singleProduct['title'].toString(),
-                            size: 16,
-
+                          CircleAvatar(
+                            backgroundColor: Colors.blueAccent,
+                            child: Text(
+                              singleProduct['id'].toString(),
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
-                          SizedBox(height: 4),
-                          Text1(
-                            'السعر: \$${singleProduct['price'].toString()}',
-                            size: 14,
+                          SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text1(
+                                  singleProduct['title'].toString(),
+                                  size: 16,
+                                ),
+                                SizedBox(height: 4),
+                                Text1(
+                                  'السعر: \$${singleProduct['price'].toString()}',
+                                  size: 14,
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
-
                     ),
-                  ],
-                ),
-              ),
-            );
-
-          },
-        ):Center(child: CircularProgressIndicator()));
+                  );
+                },
+              )
+            : Center(child: CircularProgressIndicator()));
   }
 
   void getdata() async {
@@ -84,16 +79,12 @@ class _ProductState extends State<Product> {
     });
   }
 
-
-
   Widget Text1(String txt, {double size = 5}) {
     return Text(
       txt,
       style: TextStyle(fontSize: size),
-  maxLines: 1,
-      overflow: TextOverflow.clip,
+      maxLines: 2,
+      overflow: TextOverflow.fade,
     );
   }
-
 }
-
