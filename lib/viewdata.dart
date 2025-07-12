@@ -1,6 +1,7 @@
 import 'package:api_flutter/Product.dart';
 import 'package:api_flutter/User.dart';
 import 'package:api_flutter/User_Screen.dart';
+import 'package:api_flutter/app_weather/Home_Weather.dart';
 import 'package:api_flutter/beeceptor/screen/add_product.dart';
 import 'package:api_flutter/beeceptor/screen/get_product.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class _ViewdataState extends State<Viewdata> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -85,7 +87,7 @@ class _ViewdataState extends State<Viewdata> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => AddProduct()
+                                  builder: (context) => AddProduct(null)
                               ),
                             );
                           },
@@ -93,6 +95,20 @@ class _ViewdataState extends State<Viewdata> {
                     ),
                   ],
                 ),
+            Center(
+
+                child: ElevatedButton(
+                  onPressed: ()
+                  {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HomeWeather()
+                      ),
+                    );
+                  },
+                  child:Text("View Weather") ,)
+            ),
           ],
         )
     );

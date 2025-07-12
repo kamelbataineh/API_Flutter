@@ -19,3 +19,5 @@ User(this.id,this.email,this.username,this.city);
   }
 
 }
+
+const String baseUrl = 'https://mp9b1d05df1bbc5801a6.free.beeceptor.com/api';

@@ -1,60 +1,77 @@
+import 'package:api_flutter/beeceptor/model/ProductModel.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class AddProduct extends StatefulWidget {
-  const AddProduct({super.key});
+  final Productmodel? productmodel;
+
+  const AddProduct(this.productmodel, {super.key});
 
   @override
   State<AddProduct> createState() => _AddProductState();
 }
+
 class _AddProductState extends State<AddProduct> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
 
-  bool isPost = false; // ← هنا مكانه الصحيح
+  bool isPost = false;
+  bool isEdit = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.productmodel != null) {
+      isEdit = true;
+      nameController.text = widget.productmodel!.name ?? '';
+      priceController.text = widget.productmodel!.price.toString();
+      descriptionController.text = widget.productmodel!.description ?? '';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('إضافة منتج')),
-
-      // إصلاح الشرط: عرض مؤشر التحميل عند isPost == true
+      appBar: AppBar(
+        title: Text(isEdit ? 'Edit Product' : 'Add Product'),
+      ),
       body: isPost
-          ? Center(child: LinearProgressIndicator())
+          ? const Center(child: LinearProgressIndicator())
           : SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             children: [
               TextField(
                 controller: nameController,
-                decoration: InputDecoration(
-                  labelText: 'الاسم',
+                decoration: const InputDecoration(
+                  labelText: 'Name',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 controller: descriptionController,
-                decoration: InputDecoration(
-                  labelText: 'الوصف',
+                decoration: const InputDecoration(
+                  labelText: 'Description',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 controller: priceController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'السعر',
+                decoration: const InputDecoration(
+                  labelText: 'Price',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: addProduct,
-                child: Text('إضافة المنتج'),
+                child: Text(isEdit ? 'Update Product' : 'Add Product'),
               ),
             ],
           ),
@@ -77,17 +94,34 @@ class _AddProductState extends State<AddProduct> {
     });
 
     try {
-      Response res = await dio.post(
-        'https://kamel.free.beeceptor.com/api/users',
-        data: data,
-      );
+      Response res;
+
+      if (isEdit) {
+        res = await dio.put(
+          'https://mp9b1d05df1bbc5801a6.free.beeceptor.com/api/kamel/${widget.productmodel!.id}',
+          data: data,
+        );
+      } else {
+        res = await dio.post(
+          'https://mp9b1d05df1bbc5801a6.free.beeceptor.com/api/kamel',
+          data: data,
+        );
+      }
+
       print(res.data);
     } catch (e) {
-      print("خطأ أثناء الإرسال: $e");
+      print("Error during request: $e");
     }
 
     setState(() {
       isPost = false;
     });
+
+    Navigator.of(context).pop(true);
+
+    // Clear the fields
+    nameController.clear();
+    descriptionController.clear();
+    priceController.clear();
   }
 }

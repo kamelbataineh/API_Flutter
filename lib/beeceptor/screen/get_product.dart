@@ -1,4 +1,6 @@
+import 'package:api_flutter/Class_info.dart';
 import 'package:api_flutter/beeceptor/model/ProductModel.dart';
+import 'package:api_flutter/beeceptor/screen/add_product.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -9,28 +11,92 @@ class GetProduct extends StatefulWidget {
   State<GetProduct> createState() => _GetProductState();
 }
 
-List<Productmodel>? products;
-
 class _GetProductState extends State<GetProduct> {
+  List<Productmodel>? products;
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
-    getdata();
+    fetchProducts();
+  }
+
+  Future<void> fetchProducts() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      final dio = Dio();
+      Response res = await dio.get('$baseUrl/kamel'); 
+      print("Response data: ${res.data}");
+
+      List productList = res.data;
+      products = [];
+
+      for (var item in productList) {
+        Productmodel product = Productmodel.toMap(item);
+        products!.add(product);
+      }
+    } catch (e) {
+      print("Error fetching products: $e");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> deleteProduct(Productmodel product) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final dio = Dio();
+      await dio.delete('https://mp9b1d05df1bbc5801a6.free.beeceptor.com/api/kamel/${product.id}');
+      await fetchProducts();
+    } catch (e) {
+      print("Error deleting product: $e");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('المنتجات')),
-      body: products != null
-          ? ListView.builder(
+      appBar: AppBar(
+        title: const Text('Products'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddProduct(null)),
+              ).then((value) {
+                if (value == true) {
+                  fetchProducts();
+                }
+              });
+            },
+          ),
+        ],
+      ),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : products == null || products!.isEmpty
+          ? const Center(child: Text('No products found'))
+          : ListView.builder(
         padding: const EdgeInsets.all(20),
         itemCount: products!.length,
         itemBuilder: (context, index) {
-          Productmodel product = products![index];
+          final product = products![index];
           return Card(
-            margin:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -52,56 +118,46 @@ class _GetProductState extends State<GetProduct> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text1(
+                        Text(
                           product.description.toString(),
-                          size: 16,
+                          style: const TextStyle(fontSize: 16),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 4),
-                        Text1(
-                          'السعر: \$${product.price.toString()}',
-                          size: 14,
+                        Text(
+                          'Price: \$${product.price.toString()}',
+                          style: const TextStyle(fontSize: 14),
                         ),
                       ],
                     ),
+                  ),
+                  // Added buttons for Edit and Delete side by side
+                  IconButton(
+                    icon: const Icon(Icons.edit, color: Colors.blue),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddProduct(product),
+                        ),
+                      ).then((value) {
+                        if (value == true) {
+                          fetchProducts();
+                        }
+                      });
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () => deleteProduct(product),
                   ),
                 ],
               ),
             ),
           );
         },
-      )
-          : const Center(child: CircularProgressIndicator()),
-    );
-  }
-
-  void getdata() async {
-    try {
-      final dio = Dio();
-      Response res = await dio.get(
-        'https://kamel.free.beeceptor.com/api/users',
-      );
-      print("البيانات الراجعة: ${res.data}");
-
-      List productTest = res.data;
-      products = [];
-      for (int i = 0; i < productTest.length; i++) {
-        Map<String, dynamic> productItem = productTest[i];
-        Productmodel productmodel = Productmodel.toMap(productItem);
-        products!.add(productmodel);
-      }
-
-      setState(() {});
-    } catch (e) {
-      print("حصل خطأ أثناء جلب البيانات: $e");
-    }
-  }
-
-  Widget Text1(String txt, {double size = 5}) {
-    return Text(
-      txt,
-      style: TextStyle(fontSize: size),
-      maxLines: 2,
-      overflow: TextOverflow.fade,
+      ),
     );
   }
 }
